@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  form(class="test" action="/result")
+    input(
+      type='text'
+      name='sequence'
+    )
+    input(
+      type='submit'
+      value='Submit'
+    )
+  form(name="uploader", action="/fileupload", method="post", enctype="multipart/form-data")
+    input(type="file", name="file", id="file")
+    input(type="submit", value="Upload")
