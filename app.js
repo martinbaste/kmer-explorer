@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
 
+//var kmerStream = require('./kmer');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var result = require('./routes/result');

@@ -3,27 +3,69 @@ var router = express.Router();
 var path = require('path');
 var fs = require('fs');
 var uuid = require('node-uuid');
+var fasta = require('bionode-fasta');
+var sqlite3 = require('sqlite3');
+var kmerStream = require('../kmer');
+var spawn = require("child_process").spawn;
+var streamsql = require('streamsql')
+
+
 
 router.post('/fileupload', function(req, res) {
-    var fstream;
-    req.pipe(req.busboy);
-    req.busboy.on('file', function (fieldname, file, filename) {
-        console.log("Uploading: " + filename);
-        var id = uuid.v4();
-        console.log(id)
-        var saveTo = path.join(__dirname, '../files/'+id + '.fastq');
-        fstream = fs.createWriteStream(saveTo);
-        file.pipe(fstream);
-        fstream.on('close', function () {
-            res.render('processing', {id: id});
+  var fstream;
+  req.pipe(req.busboy);
+  req.busboy.on('file', function (fieldname, file, filename) {
+    console.log("Uploading: " + filename);
+    var id = uuid.v4();
+    console.log("Id: " + id)
+    var saveTo = path.join(__dirname, '../files/'+id );
+    fstream = fs.createWriteStream(saveTo+ '.fasta');
+    file
+      .pipe(fstream);
+    fstream.on('close', function () {
+      res.render('processing', {id: id});
+      var stream = fs.createReadStream(saveTo+'.fasta')
+        .pipe(fasta())
+        .pipe(kmerStream(20))
+        .pipe(fs.createWriteStream(saveTo + '.kmers'));
+      stream.on('finish', function() {
+
+        var db = new sqlite3.Database(saveTo + '.sqlite3');
+        db.serialize(function() {
+          db.run('CREATE TABLE kmers (kmer TEXT PRIMARY KEY);', function(err) {console.log(err)});
+          db.run('CREATE TABLE network (node1 INT, node2 INT);');
+          //db.run('.schema')
         });
+        db.close();
+        var db = streamsql.connect({
+          driver: 'sqlite3',
+          filename: saveTo +'.sqlite3',
+        })
+        var kmers = db.table('kmers', {
+          fields : ['kmers']
+        })
+        var ws = kmers.createWriteStream()
+        var child = spawn('uniq', [saveTo+'.kmers']);
+        var uniq = child.stdout.pipe(ws);
+
+        uniq.on('finish', function() {
+
+          //db.close()
+          console.log('done');
+          //
+        })
+
+
+      })
+
+
     });
+  });
 });
 
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  console.log(req.query['sequence']);
   res.render('index', { title: 'de Bruijn graph generator' });
 });
 
