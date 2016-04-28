@@ -38,12 +38,30 @@ router.post('/fileupload', function(req, res) {
           })
           var ws = kmers.createWriteStream({ignoreDupes: true})
           console.log('start');
+          var data = {};
           var stream = fs.createReadStream(saveTo+'.fasta')
             .pipe(fasta())
-            .pipe(kmerStream(20))
-            .pipe(ws);
+            .pipe(kmerStream(20, data));
+          //  .pipe(ws);
           stream.on('finish', function(){
-            console.log('done')
+            console.log('done');
+            var results = {};
+            for (item in data) {
+              var value = data[item];
+              if (String(value) in results) {
+                results[String(value)].push(item);
+              } else {
+                results[String(value)] = [item];
+              }
+
+            }
+            for (item in results) {
+              if (parseInt(item) > 4) {
+                console.log(item);
+                console.log(results[item]);
+              }
+            }
+            //res.redirect('result', {id: id});
           })
 
         });
