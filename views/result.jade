@@ -3,4 +3,21 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  p Your input was #{output}
+  p Your id was #{id}
+
+
+
+  table
+    thead
+      tr
+        for object in objects
+          td= object['number']
+    tbody
+      tr
+        for object in objects
+
+          td
+            each item in object['sequences']
+              p(class="seq")= item
+//        for subobject in object
+//          td= subobject

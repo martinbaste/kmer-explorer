@@ -24,51 +24,34 @@ router.post('/fileupload', function(req, res) {
       .pipe(fstream);
     fstream.on('close', function () {
       res.render('processing', {id: id});
-      var db = new sqlite3.Database(saveTo + '.sqlite3');
-      db.serialize(function() {
-        db.run('CREATE TABLE kmers (kmer TEXT PRIMARY KEY);', function(err) {console.log(err)});
-        db.run('CREATE TABLE network (node1 INT, node2 INT);',[], function(){
-          db.close()
-          var dbs = streamsql.connect({
-            driver: 'sqlite3',
-            filename: saveTo +'.sqlite3',
-          })
-          var kmers = dbs.table('kmers', {
-            fields : ['kmer']
-          })
-          var ws = kmers.createWriteStream({ignoreDupes: true})
-          console.log('start');
-          var data = {};
-          var stream = fs.createReadStream(saveTo+'.fasta')
-            .pipe(fasta())
-            .pipe(kmerStream(20, data));
-          //  .pipe(ws);
-          stream.on('finish', function(){
-            console.log('done');
-            var results = {};
-            for (item in data) {
-              var value = data[item];
-              if (String(value) in results) {
-                results[String(value)].push(item);
-              } else {
-                results[String(value)] = [item];
-              }
 
-            }
-            for (item in results) {
-              if (parseInt(item) > 4) {
-                console.log(item);
-                console.log(results[item]);
-              }
-            }
-            //res.redirect('result', {id: id});
-          })
-
-        });
-      });
-
-
-
+      console.log('start');
+      var data = {};
+      var stream = fs.createReadStream(saveTo+'.fasta')
+        .pipe(fasta())
+        .pipe(kmerStream(20, data));
+      //  .pipe(ws);
+      stream.on('finish', function(){
+        console.log('done');
+        var results = {};
+        for (item in data) {
+          var value = data[item];
+          if (value == 1) {
+            continue
+          }
+          if (String(value) in results) {
+            results[String(value)].push(item);
+          } else {
+            results[String(value)] = [item];
+          }
+        }
+        var results2 = [];
+        for (item in results) {
+          results2.push({number: item, sequences: results[item]})
+        }
+        fs.writeFile(saveTo + '.json', JSON.stringify(results2, null, 2), 'utf-8');
+        //res.redirect('result', {id: id});
+      })
     });
   });
 });
