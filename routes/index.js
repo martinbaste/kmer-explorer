@@ -35,9 +35,20 @@ router.post('/fileupload', function(req, res) {
 
     console.log('start');
     var data = {};
-    var stream = fs.createReadStream(filePath + '.fasta')
+    var stream;
+    stream = fs.createReadStream(filePath + '.fasta')
       .pipe(fasta())
       .pipe(kmerStream(kmerLength, data));
+    /* THIS DOESNT WORK, NON FASTA FILES STILL CRASH THE SERVER
+    try {
+      stream = fs.createReadStream(filePath + '.fasta')
+        .pipe(fasta())
+        .pipe(kmerStream(kmerLength, data));
+    } catch (e) {
+      console.log(e);
+      res.render('problem', {error: 'fasta'});
+    }
+    */
     //  .pipe(ws);
     stream.on('finish', function(){
       console.log('done');
