@@ -1,8 +1,9 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  p Your id is #{id}
-  p go to
-  a(href='/result/' + id) Link
+  .content-small
+    p Your file is being processed.
+    p Check if your results are ready #[a(href='/result/' + id) here].
+    .image-cat
+    .img-source
+      p Awesome GIF by #[a(href='http://robindavey.co.uk/') Robin Davey].

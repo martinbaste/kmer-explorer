@@ -12,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var result = require('./routes/result');
 
+
 var app = express();
 
 // view engine setup
@@ -30,6 +31,9 @@ app.use(busboy());
 app.use('/', routes);
 app.use('/users', users);
 app.use('/result', result);
+app.use('/css', express.static(__dirname + '/node_modules/basscss/css/'));
+//app.use('/css', express.static(__dirname + '/public/'));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,17 +1,91 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    margin: 0;
+    color: #111;
+    background-color: #fff
 }
-
 a {
   color: #00B7FF;
 }
 
 table {
     text-align: center;
+    margin: 0 auto;
 }
 
 td {
     vertical-align: text-top;
-    line-height: 0.5em;
+    line-height: 1.2em;
+    max-width: 172px;
+    word-wrap: break-word;
+    text-align: justify;
+}
+
+.content-small {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 400px;
+}
+
+.content-wide {
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.header {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 768px;
+  text-align: center;
+  margin-bottom: 100px;
+}
+
+h1, h2, h3 {
+  font-weight: 100;
+}
+
+.h3 {
+  font-size: 1.17em;
+}
+
+.upload-group {
+  position: relative;
+  overflow: hidden;
+  margin: 10px;
+}
+
+input.upload {
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  font-size: 20px;
+  cursor: pointer;
+  filter: alpha(opacity=0);
+  top: 0;
+  right: 0;
+}
+
+.image-cat {
+  border-radius: 10px;
+  background-image: url('/images/computer-cat.gif');
+  height: 300px;
+  width: 300px;
+  background-size: cover;
+  margin: 0 auto;
+}
+
+.img-source {
+  color: '#7f8c8d';
+  font-size: 0.5em;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.button-wide {
+  width: 100%
 }

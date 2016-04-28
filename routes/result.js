@@ -10,14 +10,20 @@ router.get('/:resid', function(req, res, next) {
   try {
     fs.accessSync(filePath, fs.F_OK);
     var json = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    json = json.reverse()
     var trimmedJson = json.slice(0,5);
-    res.render('result', { title: 'de Bruijn graph generator', objects: trimmedJson });
+    res.render('result', { title: 'K-mer Explorer', objects: trimmedJson, id : id});
   } catch (e) {
     console.log(e)
-    res.render('processing', { title: 'de Bruijn graph generator', id: id });
+    res.render('processing', { title: 'K-mer Explorer', id: id });
   }
   ;
 });
+
+router.get('/download/:resid', function(req, res, next) {
+  var id = req.params.resid;
+  var filePath = path.join(__dirname, '../files/'+ id + '.json' );
+  res.download(filePath);
+})
+
 
 module.exports = router;

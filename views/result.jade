@@ -1,23 +1,26 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  p Your id was #{id}
+  .content-small
+    p Your id was #{id}.
+    p You can save this page for future reference, but files may be deleted from the server.
+
+    p #[a(href='download/' + id class='pure-button pure-button-primary button-wide') Download JSON ]
 
 
 
-  table
-    thead
-      tr
-        for object in objects
-          td= object['number']
-    tbody
-      tr
-        for object in objects
+  .content-wide
+    h2 Most common k-mers
 
-          td
-            each item in object['sequences']
-              p(class="seq")= item
-//        for subobject in object
-//          td= subobject
+    table(class="pure-table")
+      thead
+        tr
+          for object in objects
+            th= object['number'] + ' repeats'
+      tbody
+        tr
+          for object in objects
+
+            td
+              each item in object['sequences']
+                p(class="seq")= item
