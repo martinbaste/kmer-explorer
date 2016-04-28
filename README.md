@@ -9,3 +9,11 @@
 * Allow the user to filter non-frequent kmers
 * Show the distribution of kmer frequency
 * Remove inefficiency in data formatting in the end
+
+
+##How to install in a Digital Ocean server:
+* Go to Digital Ocean and create a 5$/month droplet with node.
+* Install git (sudo apt-get install git)
+* Clone git (git clone https://github.com/martinbaste/kmer-explorer)
+* Install the app (cd kmer-explorer && npm install)
+* Run the app (node app.js)
