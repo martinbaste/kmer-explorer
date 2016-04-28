@@ -78,8 +78,8 @@ input.upload {
 .image-cat {
   border-radius: 10px;
   background-image: url('/images/computer-cat.gif');
-  height: 300px;
-  width: 300px;
+  height: 400px;
+  width: 400px;
   background-size: cover;
   margin: 0 auto;
 }

@@ -7,29 +7,40 @@ var fs = require('fs');
 router.get('/:resid', function(req, res, next) {
   var id = req.params.resid;
   var filePath = path.join(__dirname, '../files/'+ id );
-  try {
+  try { //Does the json exist?
+
     fs.accessSync(filePath + '.json', fs.F_OK);
     var json = JSON.parse(fs.readFileSync(filePath + '.json', 'utf-8'));
     var trimmedJson = json.slice(0,5);
     res.render('result', { title: 'K-mer Explorer', objects: trimmedJson, id : id});
+
   } catch (e) {
     console.log(e);
-    try {
+    try { //Does the .fasta exist?
       fs.accessSync(filePath + '.fasta', fs.F_OK);
-    } catch (e) {
+      res.render('processing', { title: 'K-mer Explorer', id: id });
+
+    } catch (e) { //We cannot find anything!
       console.log(e);
       res.render('problem', {error: 'id'})
     }
 
-    res.render('processing', { title: 'K-mer Explorer', id: id });
   }
-  ;
 });
 
+//Download the json!
 router.get('/download/:resid', function(req, res, next) {
   var id = req.params.resid;
   var filePath = path.join(__dirname, '../files/'+ id + '.json' );
-  res.download(filePath);
+
+  try { //Does the json exist?
+    vres.download(filePath);
+
+  } catch (e) {
+    console.log(e);
+    res.render('problem', {error: 'id'})
+
+  }
 })
 
 

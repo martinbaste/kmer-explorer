@@ -28,7 +28,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(busboy());
 
 app.use('/', routes);
-app.use('/users', users);
 app.use('/result', result);
 //app.use('/css', express.static(__dirname + '/public/'));
 

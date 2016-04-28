@@ -8,6 +8,11 @@ var kmerStream = require('../kmer');
 var spawn = require("child_process").spawn;
 
 
+/* GET home page. */
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'K-mer Explorer' });
+});
+
 //Trigers when user uploads a file
 router.post('/fileupload', function(req, res) {
   var fstream;
@@ -65,41 +70,48 @@ router.post('/fileupload', function(req, res) {
     but not to filter and show the data */
 
     stream.on('finish', function(){
-      var results = {};
+      var dataFormat2 = {};
       for (item in data) {
         var value = data[item];
         if (value == 1) {
           //We skip kmers that are only once.
           continue
         }
-        if (String(value) in results) {
-          results[String(value)].push(item);
+        if (String(value) in dataFormat2) {
+          dataFormat2[String(value)].push(item);
         } else {
-          results[String(value)] = [item];
+          dataFormat2[String(value)] = [item];
         }
       }
-      /* Format now is
+      /*
+      Format now is
       {
         '1': [seq1, seq2],
         '2': [seq3]
       }
+      To display it we prefer the format:
+      [
+        {number:'1', sequences: [seq1, seq2]},
+        {number: '2', sequences: [seq3]}
+      ]
+
+      Probably it is faster to create this second
+      format from the beginning, or display it using
+      the first format (TODO)
       */
-      var results2 = [];
-      for (item in results) {
-        results2.push({number: item, sequences: results[item]})
+      var dataFormat3 = [];
+      for (item in dataFormat2) {
+        dataFormat3.push({number: item, sequences: dataFormat2[item]});
       }
-      results2 = results2.reverse();
-      fs.writeFile(filePath + '.json', JSON.stringify(results2, null, 2), 'utf-8');
-      //res.redirect('result', {id: id});
+      dataFormat3 = dataFormat3.reverse(); //most common first
+      //Store in .json
+      fs.writeFile(filePath + '.json', JSON.stringify(dataFormat3, null, 2), 'utf-8');
     });
   });
 });
 
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'K-mer Explorer' });
-});
+
 
 
 

@@ -8,3 +8,4 @@
 * Check file format when uploading (currently crashes the server)
 * Allow the user to filter non-frequent kmers
 * Show the distribution of kmer frequency
+* Remove inefficiency in data formatting in the end

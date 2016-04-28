@@ -4,9 +4,8 @@ block content
   .content-small
     p There was an error with your request.
     case error
-      when fasta
+      when 'fasta'
         p Your file was not recognised as a fasta file. Please check the format.
-      when id
+      when 'id'
         p We couldn't find anything in this address. It is possible that your files have been deleted.
     p If you think there is an error in the program please open an issue in GitHub.
-    
