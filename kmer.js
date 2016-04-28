@@ -1,6 +1,8 @@
 var express = require('express');
 var stream = require('stream');
 
+//My kmerStream function. It takes one fasta sequence,
+//gets all kmers and adds the count to results.
 function kmerStream(kmerLength, results){
   var ws = stream.Writable({objectMode: true});
 
@@ -15,7 +17,7 @@ function kmerStream(kmerLength, results){
       }
 
     }
-    next();
+    next(); //Lets the stream know the function is ready
   };
   return ws
 }

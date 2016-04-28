@@ -4,41 +4,45 @@ var path = require('path');
 var fs = require('fs');
 var uuid = require('node-uuid');
 var fasta = require('bionode-fasta');
-var sqlite3 = require('sqlite3');
 var kmerStream = require('../kmer');
 var spawn = require("child_process").spawn;
-var streamsql = require('streamsql')
 
 
-
+//Trigers when user uploads a file
 router.post('/fileupload', function(req, res) {
   var fstream;
   var id;
   var filePath;
   var kmerLength;
   req.pipe(req.busboy);
+
+  //This handles the file, it gets written into disk with new name
   req.busboy.on('file', function (fieldname, file, filename) {
-    console.log("Uploading: " + filename);
     id = uuid.v4();
-    console.log("Id: " + id)
     filePath = path.join(__dirname, '../files/'+id );
     fstream = fs.createWriteStream(filePath + '.fasta');
     file.pipe(fstream);
   });
+
+  //This handles the kmer Length user input
   req.busboy.on('field', function(fieldname, val) {
       if (fieldname == 'kmerLength') {
         kmerLength = parseInt(val);
       }
   });
-  req.busboy.on('finish', function() {
-    res.render('processing', { title: 'K-mer Explorer', id: id});
 
-    console.log('start');
+  //Only continue when form processing is done
+  req.busboy.on('finish', function() {
+    //Displays the processing view
+    res.render('processing', { title: 'K-mer Explorer', id: id});
     var data = {};
     var stream;
+
+    //This turns the fasta file into sequences and they are sent to kmerStream
     stream = fs.createReadStream(filePath + '.fasta')
       .pipe(fasta())
       .pipe(kmerStream(kmerLength, data));
+
     /* THIS DOESNT WORK, NON FASTA FILES STILL CRASH THE SERVER
     try {
       stream = fs.createReadStream(filePath + '.fasta')
@@ -49,13 +53,23 @@ router.post('/fileupload', function(req, res) {
       res.render('problem', {error: 'fasta'});
     }
     */
-    //  .pipe(ws);
+
+    /* data now contains the info in this format:
+    {
+      'sequence1': 1,
+      'sequence2': 1.
+      'sequence3': 2,
+      'sequence4': 4
+    }
+    Which is convenient when analysing their frequency
+    but not to filter and show the data */
+
     stream.on('finish', function(){
-      console.log('done');
       var results = {};
       for (item in data) {
         var value = data[item];
         if (value == 1) {
+          //We skip kmers that are only once.
           continue
         }
         if (String(value) in results) {
@@ -64,6 +78,12 @@ router.post('/fileupload', function(req, res) {
           results[String(value)] = [item];
         }
       }
+      /* Format now is
+      {
+        '1': [seq1, seq2],
+        '2': [seq3]
+      }
+      */
       var results2 = [];
       for (item in results) {
         results2.push({number: item, sequences: results[item]})

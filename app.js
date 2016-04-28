@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var busboy = require('connect-busboy');
 
-//var kmerStream = require('./kmer');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -31,7 +30,6 @@ app.use(busboy());
 app.use('/', routes);
 app.use('/users', users);
 app.use('/result', result);
-app.use('/css', express.static(__dirname + '/node_modules/basscss/css/'));
 //app.use('/css', express.static(__dirname + '/public/'));
 
 
