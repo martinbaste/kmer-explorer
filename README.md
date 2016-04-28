@@ -9,6 +9,7 @@
 * Allow the user to filter non-frequent kmers
 * Show the distribution of kmer frequency
 * Remove inefficiency in data formatting in the end
+* Finish digital ocean tutorial (https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-14-04)
 
 
 ##How to install in a Digital Ocean server:
@@ -16,4 +17,4 @@
 * Install git (sudo apt-get install git)
 * Clone git (git clone https://github.com/martinbaste/kmer-explorer)
 * Install the app (cd kmer-explorer && npm install)
-* Run the app (node app.js)
+* ~~Run the app (node app.js)~~ INSECURE

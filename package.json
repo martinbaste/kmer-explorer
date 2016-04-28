@@ -1,6 +1,6 @@
 {
-  "name": "de-bruijn-app",
-  "version": "0.0.0",
+  "name": "kmer-explorer",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -17,5 +17,9 @@
     "morgan": "~1.6.1",
     "node-uuid": "^1.4.7",
     "serve-favicon": "~2.3.0"
+  },
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/martinbaste/kmer-explorer"
   }
 }

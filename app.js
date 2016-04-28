@@ -30,6 +30,7 @@ app.use('/', routes);
 app.use('/result', result);
 //app.use('/css', express.static(__dirname + '/public/'));
 
+app.listen(3000);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
