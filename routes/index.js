@@ -24,39 +24,31 @@ router.post('/fileupload', function(req, res) {
       .pipe(fstream);
     fstream.on('close', function () {
       res.render('processing', {id: id});
-      var stream = fs.createReadStream(saveTo+'.fasta')
-        .pipe(fasta())
-        .pipe(kmerStream(20))
-        .pipe(fs.createWriteStream(saveTo + '.kmers'));
-      stream.on('finish', function() {
+      var db = new sqlite3.Database(saveTo + '.sqlite3');
+      db.serialize(function() {
+        db.run('CREATE TABLE kmers (kmer TEXT PRIMARY KEY);', function(err) {console.log(err)});
+        db.run('CREATE TABLE network (node1 INT, node2 INT);',[], function(){
+          db.close()
+          var dbs = streamsql.connect({
+            driver: 'sqlite3',
+            filename: saveTo +'.sqlite3',
+          })
+          var kmers = dbs.table('kmers', {
+            fields : ['kmer']
+          })
+          var ws = kmers.createWriteStream({ignoreDupes: true})
+          console.log('start');
+          var stream = fs.createReadStream(saveTo+'.fasta')
+            .pipe(fasta())
+            .pipe(kmerStream(20))
+            .pipe(ws);
+          stream.on('finish', function(){
+            console.log('done')
+          })
 
-        var db = new sqlite3.Database(saveTo + '.sqlite3');
-        db.serialize(function() {
-          db.run('CREATE TABLE kmers (kmer TEXT PRIMARY KEY);', function(err) {console.log(err)});
-          db.run('CREATE TABLE network (node1 INT, node2 INT);');
-          //db.run('.schema')
         });
-        db.close();
-        var db = streamsql.connect({
-          driver: 'sqlite3',
-          filename: saveTo +'.sqlite3',
-        })
-        var kmers = db.table('kmers', {
-          fields : ['kmers']
-        })
-        var ws = kmers.createWriteStream()
-        var child = spawn('uniq', [saveTo+'.kmers']);
-        var uniq = child.stdout.pipe(ws);
+      });
 
-        uniq.on('finish', function() {
-
-          //db.close()
-          console.log('done');
-          //
-        })
-
-
-      })
 
 
     });
