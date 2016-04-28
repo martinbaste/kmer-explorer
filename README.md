@@ -1,4 +1,4 @@
-#kmer-explorer
+#Kmer Explorer
 
 ##To-do:
 * Delete files after period (24h)
