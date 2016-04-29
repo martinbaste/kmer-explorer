@@ -10,7 +10,7 @@ var spawn = require("child_process").spawn;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'K-mer Explorer' });
+  res.render('index');
 });
 
 //Trigers when user uploads a file
@@ -39,7 +39,7 @@ router.post('/fileupload', function(req, res) {
   //Only continue when form processing is done
   req.busboy.on('finish', function() {
     //Displays the processing view
-    res.render('processing', { title: 'K-mer Explorer', id: id});
+    res.render('processing', { id: id});
     var data = {};
     var stream;
 

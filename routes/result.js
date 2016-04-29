@@ -12,13 +12,13 @@ router.get('/:resid', function(req, res, next) {
     fs.accessSync(filePath + '.json', fs.F_OK);
     var json = JSON.parse(fs.readFileSync(filePath + '.json', 'utf-8'));
     var trimmedJson = json.slice(0,5);
-    res.render('result', { title: 'K-mer Explorer', objects: trimmedJson, id : id});
+    res.render('result', { objects: trimmedJson, id : id});
 
   } catch (e) {
     console.log(e);
     try { //Does the .fasta exist?
       fs.accessSync(filePath + '.fasta', fs.F_OK);
-      res.render('processing', { title: 'K-mer Explorer', id: id });
+      res.render('processing', {  id: id });
 
     } catch (e) { //We cannot find anything!
       console.log(e);
@@ -34,7 +34,7 @@ router.get('/download/:resid', function(req, res, next) {
   var filePath = path.join(__dirname, '../files/'+ id + '.json' );
 
   try { //Does the json exist?
-    vres.download(filePath);
+    res.download(filePath);
 
   } catch (e) {
     console.log(e);
