@@ -1,4 +1,6 @@
 files/*
+!files/.touch
+
 # Logs
 logs
 *.log
